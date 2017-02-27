@@ -31,8 +31,8 @@ namespace ToDoList
     public void Test_EqualOverrideTrueForSameDescription()
     {
       //Arrange, Act
-      Task firstTask = new Task("Mow the lawn", 1, "01-02-2017");
-      Task secondTask = new Task("Mow the lawn", 1, "01-02-2017");
+      Task firstTask = new Task("Mow the lawn", "01-02-2017");
+      Task secondTask = new Task("Mow the lawn", "01-02-2017");
 
       //Assert
       Assert.Equal(firstTask, secondTask);
@@ -42,7 +42,7 @@ namespace ToDoList
     public void Test_Save()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn", 1, "01-02-2017");
+      Task testTask = new Task("Mow the lawn", "01-02-2017");
       testTask.Save();
 
       //Act
@@ -57,7 +57,7 @@ namespace ToDoList
     public void Test_SaveAssignsIdToObject()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn", 1, "01-02-2017");
+      Task testTask = new Task("Mow the lawn", "01-02-2017");
       testTask.Save();
 
       //Act
@@ -74,7 +74,7 @@ namespace ToDoList
     public void Test_FindFindsTaskInDatabase()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn", 1, "01-02-2017");
+      Task testTask = new Task("Mow the lawn", "01-02-2017");
       testTask.Save();
 
       //Act
@@ -88,9 +88,9 @@ namespace ToDoList
     public void Test_SortByDate()
     {
       //Arrange
-      Task testTask1 = new Task("Mow the lawn", 1, "01-02-2017");
-      Task testTask2 = new Task("Mow the lawn", 1, "01-03-2017");
-      Task testTask3 = new Task("Mow the lawn", 1, "01-01-2017");
+      Task testTask1 = new Task("Mow the lawn", "01-02-2017");
+      Task testTask2 = new Task("Mow the lawn", "01-03-2017");
+      Task testTask3 = new Task("Mow the lawn", "01-01-2017");
       testTask1.Save();
       testTask2.Save();
       testTask3.Save();

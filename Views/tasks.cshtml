@@ -12,6 +12,10 @@ else
     @foreach (var task in @Model)
     {
       <li><a href = '/tasks/@task.GetId()'>@task.GetDescription()</a></li>
+     <form action="/tasks/update/@task.GetId()" method="post">
+         <input type="hidden" name="_method" value="PATCH">
+      <button type="submit" class="btn">Mark as completed</button>
+  </form>
     }
   </ul>
 
@@ -21,3 +25,5 @@ else
 }
 <p><a href="/tasks/new">Add a new task</a></p>
 <p><a href="/">Return home</a></p>
+
+<p><a href ="/tasks/completed">See completed tasks</a></p>

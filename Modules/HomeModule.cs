@@ -75,6 +75,23 @@ namespace ToDoList
                 category.AddTask(task);
                 return View["success.cshtml"];
             };
+
+            Get["tasks/completed"] = _ => {
+                List<Task> updatedTasks = Task.CompletedTasks();
+                return View["completed_tasks.cshtml", updatedTasks];
+            };
+
+            Get["tasks/update/{id}"] = _ => {
+                List<Task> updatedTasks = Task.CompletedTasks();
+                return View["completed_tasks.cshtml", updatedTasks];
+           };
+
+            Patch["tasks/update/{id}"] = parameters => {
+                Task completedTask = Task.Find(parameters.id);
+                completedTask.MarkComplete();
+                List<Task> updatedTasks = Task.CompletedTasks();
+                return View["completed_tasks.cshtml", updatedTasks];
+           };
         }
 
     }

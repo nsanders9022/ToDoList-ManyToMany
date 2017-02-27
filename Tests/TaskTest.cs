@@ -195,6 +195,32 @@ namespace ToDoList
         Assert.Equal(resultResult, testResult);
     }
 
+    [Fact]
+    public void Test_Update_ReturnsComplete_list()
+    {
+        //Arrange
+        Task testTask = new Task("Mow the lawn", "01-02-2017", false);
+        testTask.Save();
+        Task testTask2 = new Task("Take out garbage", "01-02-2017", false);
+        testTask2.Save();
+
+        //Act
+        testTask.MarkComplete();
+        List<Task> resultResult = new List<Task>{testTask};
+        List<Task> testResult = Task.CompletedTasks();
+
+        foreach (Task task in resultResult)
+        {
+            Console.WriteLine("result: " + task.GetDescription() + ", " + task.GetId() + ", " + task.GetCompleted());
+        }
+        foreach (Task task in testResult)
+        {
+            Console.WriteLine("test: " + task.GetDescription() + ", " + task.GetId() + ", " + task.GetCompleted());
+        }
+
+        Assert.Equal(resultResult, testResult);
+    }
+
     public void Dispose()
     {
         Task.DeleteAll();

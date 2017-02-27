@@ -51,19 +51,19 @@ namespace ToDoList
             _completed = newCompleted;
         }
 
-        public int CompletedBoolToInt()
-       {
-           if (GetCompleted() == true)
-           {
-               return 1;
-           }
-           else
-           {
-               return 0;
-           }
-       }
+        public bool CompletedIntToBool(int number)
+        {
+            if (number == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-       public int TranslateComplete()
+        public int TranslateComplete()
         {
             if (this._completed == true)
             {
@@ -404,5 +404,41 @@ namespace ToDoList
                 conn.Close();
             }
         }
+
+        public void MarkComplete()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE tasks SET completed = 1 OUTPUT INSERTED.completed WHERE id = @taskId;", conn);
+
+            SqlParameter taskIdParameter = new SqlParameter();
+            taskIdParameter.ParameterName = "@taskId";
+            taskIdParameter.Value = this.GetId();
+            cmd.Parameters.Add(taskIdParameter);
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                if (rdr.GetByte(0) == 1)
+                {
+                    this._completed = true;
+                }
+                else{
+                    this._completed = false;
+                }
+            }
+
+            if (rdr != null)
+            {
+                rdr.Close();
+            }
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
+        }
+
     }
 }

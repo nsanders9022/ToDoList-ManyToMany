@@ -9,12 +9,12 @@ else
 {
   <h1>Here is your list of tasks:</h1>
   <ul>
-    @foreach (var task in Model)
+    @foreach (var task in @Model)
     {
       <li><a href = '/tasks/@task.GetId()'>@task.GetDescription()</a></li>
     }
   </ul>
-  
+
   <form action="/tasks/delete" method="post">
     <button type="submit">Clear all tasks</button>
   </form>

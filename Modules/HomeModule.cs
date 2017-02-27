@@ -33,13 +33,13 @@ namespace ToDoList
                 return View["tasks_form.cshtml", AllCategories];
             };
             Post["/tasks/new"] = _ => {
-                Task newTask = new Task(Request.Form["task-description"], Request.Form["dueDate"]);
+                Task newTask = new Task(Request.Form["task-description"], Request.Form["dueDate"], Request.Form["completed"]);
                 newTask.Save();
                 return View["success.cshtml"];
             };
             Post["/tasks/delete"] = _ => {
                 Task.DeleteAll();
-                return View["cleared.cshtml"];
+                return View["index.cshtml"];
             };
             Get["tasks/{id}"] = parameters => {
                 Dictionary<string, object> model = new Dictionary<string, object>();

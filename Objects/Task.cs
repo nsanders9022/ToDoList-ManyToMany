@@ -16,6 +16,7 @@ namespace ToDoList
             _id = Id;
             _description = Description;
             _dueDate = DueDate;
+            _completed = Completed;
         }
 
         public int GetId()
@@ -89,6 +90,11 @@ namespace ToDoList
                 bool completedEquality = this.GetCompleted() == newTask.GetCompleted();
                 return (idEquality && descriptionEquality && dueDateEquality && completedEquality);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.GetDescription().GetHashCode();
         }
 
         public static List<Task> GetAll()
@@ -294,6 +300,7 @@ namespace ToDoList
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+
         public static Task Find(int id)
         {
             SqlConnection conn = DB.Connection();
@@ -335,6 +342,48 @@ namespace ToDoList
                 conn.Close();
             }
             return foundTask;
+        }
+
+        public static List<Task> CompletedTasks()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+            List<Task> completedList = new List<Task>{};
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM tasks WHERE completed = 1;", conn);
+            // SqlParameter taskIdParameter = new SqlParameter();
+            // taskIdParameter.ParameterName = "@TaskCompleted";
+            // taskIdParameter.Value = 1.ToString();
+            // cmd.Parameters.Add(taskIdParameter);
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+
+            while(rdr.Read())
+            {
+                int foundTaskId = rdr.GetInt32(0);
+                string foundTaskDescription = rdr.GetString(1);
+                string foundTaskDueDate = rdr.GetString(2);
+                bool foundTaskCompleted;
+                if (rdr.GetByte(3) == 1)
+                {
+                    foundTaskCompleted = true;
+                }
+                else{
+                    foundTaskCompleted = false;
+                }
+                Task newTask = new Task(foundTaskDescription, foundTaskDueDate, foundTaskCompleted, foundTaskId);
+                completedList.Add(newTask);
+            }
+
+            if (rdr != null)
+            {
+                rdr.Close();
+            }
+            if (conn != null)
+            {
+                conn.Close();
+            }
+            return completedList;
         }
 
         public void Delete()

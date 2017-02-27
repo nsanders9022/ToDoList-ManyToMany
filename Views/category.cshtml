@@ -1,4 +1,4 @@
-<h2>Here are all the tasks in this category:</h2>
+<h2>Here are all the tasks in @Model["category"].GetName():</h2>
 
 @if (@Model["tasks"].Count == 0)
 {
@@ -10,8 +10,21 @@ else
     @foreach (var task in @Model["tasks"])
     {
       <li>@task.GetDescription()</li>
+      <li>@task.GetDueDate()</li>
+
     }
   </ol>
 }
-<p><a href="/tasks/new">Add a new task</a></p>
+<h4>Add a task to this category:</h4>
+<form action='/category/add_task' method='post'>
+  <input id='category-id' name='category-id' type='hidden' value='@Model["category"].GetId()'>
+  <label for='task-id'>Select a task</label>
+  <select id='task-id' name='task-id' type='text'>
+    @foreach (var task in @Model["allTasks"])
+    {
+      <option value='@task.GetId()'>@task.GetDescription()</option>
+    }
+  </select>
+  <button type='submit'>Add</button>
+</form>
 <p><a href="/">Return to Main Page</a></p>

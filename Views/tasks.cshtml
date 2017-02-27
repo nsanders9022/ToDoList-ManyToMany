@@ -11,13 +11,16 @@ else
   <ul>
     @foreach (var task in @Model)
     {
-      <li><a href = '/tasks/@task.GetId()'>@task.GetDescription()</a></li>
+      <li><a href = '/tasks/@task.GetId()'>@task.GetDescription(), @task.GetDueDate()</a></li>
      <form action="/tasks/update/@task.GetId()" method="post">
          <input type="hidden" name="_method" value="PATCH">
       <button type="submit" class="btn">Mark as completed</button>
   </form>
     }
   </ul>
+  <form action="/tasks/sorted" method="post">
+      <button type="submit" class="btn">Sort by due date</button>
+  </form>
 
   <form action="/tasks/delete" method="post">
     <button type="submit">Clear all tasks</button>

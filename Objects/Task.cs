@@ -104,7 +104,7 @@ namespace ToDoList
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("SELECT * FROM tasks;", conn);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM tasks", conn);
             SqlDataReader rdr = cmd.ExecuteReader();
 
             while(rdr.Read())

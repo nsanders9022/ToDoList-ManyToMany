@@ -92,6 +92,12 @@ namespace ToDoList
                 List<Task> updatedTasks = Task.CompletedTasks();
                 return View["completed_tasks.cshtml", updatedTasks];
            };
+
+           Post["/tasks/sorted"]= _=> {
+               List<Task> AllTasks = Task.OrderByDate();
+               return View["tasks.cshtml", AllTasks];
+           };
+
         }
 
     }

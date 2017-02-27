@@ -9,8 +9,9 @@ namespace ToDoList
         private int _id;
         private string _description;
         private string _dueDate;
+        private bool _completed;
 
-        public Task(string Description, string DueDate, int Id = 0)
+        public Task(string Description, string DueDate, bool Completed = false, int Id = 0)
         {
             _id = Id;
             _description = Description;
@@ -39,6 +40,40 @@ namespace ToDoList
             _dueDate = newDueDate;
         }
 
+        public bool GetCompleted()
+        {
+            return _completed;
+        }
+
+        public void SetCompleted(bool newCompleted)
+        {
+            _completed = newCompleted;
+        }
+
+        public int CompletedBoolToInt()
+       {
+           if (GetCompleted() == true)
+           {
+               return 1;
+           }
+           else
+           {
+               return 0;
+           }
+       }
+
+       public int TranslateComplete()
+        {
+            if (this._completed == true)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public override bool Equals(System.Object otherTask)
         {
             if (!(otherTask is Task))
@@ -51,7 +86,8 @@ namespace ToDoList
                 bool idEquality = this.GetId() == newTask.GetId();
                 bool descriptionEquality = this.GetDescription() == newTask.GetDescription();
                 bool dueDateEquality = this.GetDueDate() == newTask.GetDueDate();
-                return (idEquality && descriptionEquality && dueDateEquality);
+                bool completedEquality = this.GetCompleted() == newTask.GetCompleted();
+                return (idEquality && descriptionEquality && dueDateEquality && completedEquality);
             }
         }
 
@@ -70,7 +106,15 @@ namespace ToDoList
                 int taskId = rdr.GetInt32(0);
                 string taskDescription = rdr.GetString(1);
                 string taskDueDate = rdr.GetString(2);
-                Task newTask = new Task(taskDescription, taskDueDate, taskId);
+                bool taskCompleted;
+                if (rdr.GetByte(3) == 1)
+                {
+                    taskCompleted = true;
+                }
+                else{
+                    taskCompleted = false;
+                }
+                Task newTask = new Task(taskDescription, taskDueDate, taskCompleted, taskId);
                 AllTasks.Add(newTask);
             }
             if (rdr != null)
@@ -99,7 +143,15 @@ namespace ToDoList
                 int taskId = rdr.GetInt32(0);
                 string taskDescription = rdr.GetString(1);
                 string taskDueDate = rdr.GetString(2);
-                Task newTask = new Task(taskDescription, taskDueDate, taskId);
+                bool taskCompleted;
+                if (rdr.GetByte(3) == 1)
+                {
+                    taskCompleted = true;
+                }
+                else{
+                    taskCompleted = false;
+                }
+                Task newTask = new Task(taskDescription, taskDueDate, taskCompleted, taskId);
                 AllTasks.Add(newTask);
             }
             if (rdr != null)
@@ -118,7 +170,7 @@ namespace ToDoList
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("INSERT INTO tasks (description, duedate) OUTPUT INSERTED.id VALUES (@TaskDescription, @TaskDueDate);", conn);
+            SqlCommand cmd = new SqlCommand("INSERT INTO tasks (description, duedate, completed) OUTPUT INSERTED.id VALUES (@TaskDescription, @TaskDueDate, @TaskCompleted);", conn);
 
             SqlParameter descriptionParameter = new SqlParameter();
             descriptionParameter.ParameterName = "@TaskDescription";
@@ -128,8 +180,13 @@ namespace ToDoList
             dueDateParameter.ParameterName = "@TaskDueDate";
             dueDateParameter.Value = this.GetDueDate();
 
+            SqlParameter completedParameter = new SqlParameter();
+            completedParameter.ParameterName = "@TaskCompleted";
+            completedParameter.Value = this.TranslateComplete();
+
             cmd.Parameters.Add(descriptionParameter);
             cmd.Parameters.Add(dueDateParameter);
+            cmd.Parameters.Add(completedParameter);
 
             SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -252,14 +309,22 @@ namespace ToDoList
             int foundTaskId = 0;
             string foundTaskDescription = null;
             string foundTaskDueDate = null;
+            bool foundTaskCompleted = false;
 
             while(rdr.Read())
             {
                 foundTaskId = rdr.GetInt32(0);
                 foundTaskDescription = rdr.GetString(1);
                 foundTaskDueDate = rdr.GetString(2);
+                if (rdr.GetByte(3) == 1)
+                {
+                    foundTaskCompleted = true;
+                }
+                else{
+                    foundTaskCompleted = false;
+                }
             }
-            Task foundTask = new Task(foundTaskDescription, foundTaskDueDate, foundTaskId);
+            Task foundTask = new Task(foundTaskDescription, foundTaskDueDate, foundTaskCompleted, foundTaskId);
 
             if (rdr != null)
             {

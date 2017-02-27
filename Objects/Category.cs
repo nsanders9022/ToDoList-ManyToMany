@@ -181,7 +181,15 @@ namespace ToDoList
                     int thisTaskId = queryReader.GetInt32(0);
                     string taskDescription = queryReader.GetString(1);
                     string taskDueDate =  queryReader.GetString(2);
-                    Task foundTask = new Task(taskDescription, taskDueDate, thisTaskId);
+                    bool taskCompleted;
+                    if (queryReader.GetByte(3) == 1)
+                    {
+                        taskCompleted = true;
+                    }
+                    else{
+                        taskCompleted = false;
+                    }
+                    Task foundTask = new Task(taskDescription, taskDueDate, taskCompleted, thisTaskId);
                     tasks.Add(foundTask);
                 }
                 if (queryReader != null)
@@ -195,7 +203,7 @@ namespace ToDoList
             }
             return tasks;
         }
-        
+
         public void AddTask(Task newTask)
         {
             SqlConnection conn = DB.Connection();
